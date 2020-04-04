@@ -25,9 +25,7 @@ namespace ConsoleAppPM
                 case 2:
                     Console.WriteLine("Данная функция пока не реализована");
                     break;
-
             }
-
         }
         static int[] DeclarArray()          // Записываем INN в виде массива, где каждый элемент массива является одним символом   
         {
