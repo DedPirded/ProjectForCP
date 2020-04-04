@@ -9,10 +9,10 @@ namespace ConsoleAppPM
             //Console.WriteLine("Hell to World!");
             Console.WriteLine("Выберете операцию: 1 - INN с 10 символами; 2 - INN с 14 символами");
             int numChoice = Convert.ToInt32(Console.ReadLine());
-            switch(numChoice)
+            switch (numChoice)
             {
-                case 1:               
-                    Console.WriteLine("Напишите ваш INN");                   
+                case 1:
+                    Console.WriteLine("Напишите ваш INN");
                     int[] inn = DeclarArray();
                     bool checkAnswer;
                     int year;
@@ -25,19 +25,34 @@ namespace ConsoleAppPM
                 case 2:
                     Console.WriteLine("Данная функция пока не реализована");
                     break;
-                               
+
             }
-            
+
         }
         static int[] DeclarArray()          // Записываем INN в виде массива, где каждый элемент массива является одним символом   
         {
-            long notX = Convert.ToInt64(Console.ReadLine());
-            char[] y = notX.ToString().ToCharArray();
+            char[] y;
+            do
+            {
+                long notX = Convert.ToInt64(Console.ReadLine());
+                y = notX.ToString().ToCharArray();
+                if (y.Length > 10)
+                {
+                    Console.WriteLine("Количество введённых знаков больше 10. Повторите попытку.");
+                }
+                else
+                {
+                    if (y.Length < 10)
+                    {
+                        Console.WriteLine("Количество введённых знаков меньше 10. Повторите попытку.");
+                    }
+                }
+            } while (y.Length < 10 | y.Length > 10);
             int[] smt = new int[10];
             for (int i = 0; i < smt.Length; i++)
             {
                 smt[i] = Convert.ToInt32(y[i]) - '0';
-            }          
+            }
             return smt;
         }
         static void CheckINN(int[] inn, out bool checkAnswer)
@@ -60,8 +75,9 @@ namespace ConsoleAppPM
             year = 1900;
             day = 01;
             month = 01;
-            int num = inn[0] * 10000 + inn[1] *1000 + inn[2] * 100 + inn[3] * 10 + inn[4];                       
-            while (num > 365){
+            int num = inn[0] * 10000 + inn[1] * 1000 + inn[2] * 100 + inn[3] * 10 + inn[4];
+            while (num > 365)
+            {
                 if (year % 4 == 0)
                 {
                     num -= 366;
@@ -98,19 +114,21 @@ namespace ConsoleAppPM
         }
         static string CheckSex(int[] inn)
         {
-            if (inn[8] % 2 == 0)         
-                return "Female";           
+            if (inn[8] % 2 == 0)
+                return "Female";
             else
                 return "Male";
         }
         static void WriteAnswer(bool x, string answerSex, int year, int month, int day)
         {
             if (x == true)
+            {
                 Console.WriteLine("INN верный");
+                Console.WriteLine("Пол - " + answerSex);
+                Console.WriteLine($"День вашего рождения: {year}.{month}.{day}");
+            }
             else
                 Console.WriteLine("INN не верный");
-            Console.WriteLine("Пол - " + answerSex);
-            Console.WriteLine($"День вашего рождения: {year}.{month}.{day}");
         }
     }
 }
