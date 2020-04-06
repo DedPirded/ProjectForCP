@@ -7,46 +7,67 @@ namespace ConsoleAppPM
         static void Main(string[] args)
         {
             //Console.WriteLine("Hell to World!");
-            Console.WriteLine("Выберете операцию: 1 - INN с 10 символами; 2 - INN с 14 символами");
+            
+            Console.WriteLine("Выберете операцию: 1 - проверка INN кода; 2 - проверка ЕДРПОУ; 3 - //");
             int numChoice = Convert.ToInt32(Console.ReadLine());
             switch (numChoice)
             {
                 case 1:
-                    Console.WriteLine("Напишите ваш INN");
-                    int[] inn = DeclarArray();
-                    bool checkAnswer;
-                    int year;
-                    int day;
-                    int month;
-                    CheckINN(inn, out checkAnswer);
-                    CheckBirthday(inn, out year, out month, out day);
-                    WriteAnswer(checkAnswer, CheckSex(inn), year, month, day);
+                    Console.WriteLine("Выберете операцию: 1 - INN с 10 символами; 2 - INN с 14 символами, 3 - выход");
+                    numChoice = Convert.ToInt32(Console.ReadLine());
+                    switch (numChoice)
+                    {
+                        case 1:
+                            Console.WriteLine("Напишите ваш INN");
+                            int numSymOfArrayINN = 10;
+                            int[] inn = DeclarArray(numSymOfArrayINN);                            
+                            bool checkAnswerINN;
+                            int year;
+                            int day;
+                            int month;
+                            CheckINN(inn, out checkAnswerINN);
+                            CheckBirthday(inn, out year, out month, out day);
+                            WriteAnswer(checkAnswerINN, CheckSex(inn), year, month, day);
+                            break;
+                        case 2:
+                            Console.WriteLine("Данная функция пока не реализована");
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 case 2:
-                    Console.WriteLine("Данная функция пока не реализована");
+                    Console.WriteLine("Напишите ваш код ЕДПРОУ");
+                    int numSymOfArrayEDRPOU = 8;
+                    int[] kodEDPROU = DeclarArray(numSymOfArrayEDRPOU);
+                    bool checkAnswerEDRPOU = CheckEDPROU(kodEDPROU);
+                    if(checkAnswerEDRPOU == true)                    
+                        Console.WriteLine("ЕДРПОУ верный");                    
+                    else
+                        Console.WriteLine("ЕДРПОУ не верный");
                     break;
             }
         }
-        static int[] DeclarArray()          // Записываем INN в виде массива, где каждый элемент массива является одним символом   
+        static int[] DeclarArray(int num)          // Записываем INN в виде массива, где каждый элемент массива является одним символом   
         {
             char[] y;
             do
             {
                 long notX = Convert.ToInt64(Console.ReadLine());
                 y = notX.ToString().ToCharArray();
-                if (y.Length > 10)
+                if (y.Length > num)
                 {
                     Console.WriteLine("Количество введённых знаков больше 10. Повторите попытку.");
                 }
                 else
                 {
-                    if (y.Length < 10)
+                    if (y.Length < num)
                     {
                         Console.WriteLine("Количество введённых знаков меньше 10. Повторите попытку.");
                     }
                 }
-            } while (y.Length < 10 | y.Length > 10);
-            int[] smt = new int[10];
+            } while (y.Length < num | y.Length > num);
+            int[] smt = new int[num];
             for (int i = 0; i < smt.Length; i++)
             {
                 smt[i] = Convert.ToInt32(y[i]) - '0';
@@ -67,6 +88,40 @@ namespace ConsoleAppPM
             else
                 checkAnswer = false;
 
+        }
+        static bool CheckEDPROU(int[] arr)
+        {
+            int arrInt = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arrInt += arr[i] * Convert.ToInt32(Math.Pow(10, arr.Length - i - 1));
+            }
+            if (arrInt < 30000000 | arrInt > 60000000)
+            {
+                int[] koef = new int[7] { 1, 2, 3, 4, 5, 6, 7};
+                int sum = 0;
+                for (int i = 0; i < arr.Length-1; i++)
+                {
+                    sum += arr[i] * koef[i];
+                }
+                if (sum % 11 == arr[arr.Length - 1])
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                int[] koef = new int[7] { 7, 2, 3, 4, 5, 6, 1};
+                int sum = 0;
+                for (int i = 0; i < arr.Length - 1; i++)
+                {
+                    sum += arr[i] * koef[i];
+                }
+                if (sum % 11 == arr[arr.Length - 1])
+                    return true;
+                else
+                    return false;
+            }
         }
         static void CheckBirthday(int[] inn, out int year, out int month, out int day)
         {
