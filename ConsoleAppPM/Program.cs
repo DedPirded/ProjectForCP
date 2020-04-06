@@ -8,7 +8,7 @@ namespace ConsoleAppPM
         {
             //Console.WriteLine("Hell to World!");
             
-            Console.WriteLine("Выберете операцию: 1 - проверка INN кода; 2 - проверка ЕДРПОУ; 3 - //");
+            Console.WriteLine("Выберете операцию: 1 - проверка INN кода; 2 - проверка ЕДРПОУ; 3 - проверка банкоской карты");
             int numChoice = Convert.ToInt32(Console.ReadLine());
             switch (numChoice)
             {
@@ -45,6 +45,16 @@ namespace ConsoleAppPM
                         Console.WriteLine("ЕДРПОУ верный");                    
                     else
                         Console.WriteLine("ЕДРПОУ не верный");
+                    break;
+                case 3:
+                    Console.WriteLine("Напишите номер карты");
+                    int numSymOfArrayCard = 16;
+                    int[] cardArr = DeclarArray(numSymOfArrayCard);
+                    bool checkAnswerCard = CheckCard(cardArr);
+                    if (checkAnswerCard == true)
+                        Console.WriteLine("Номер карты верный");
+                    else
+                        Console.WriteLine("Номер карты не верный");
                     break;
             }
         }
@@ -122,6 +132,32 @@ namespace ConsoleAppPM
                 else
                     return false;
             }
+        }
+        static bool CheckCard(int[] arr)
+        {
+            int sum = 0;
+            int num = 0;
+            char[] y;
+            for (int i = 0; i < arr.Length; i+=2)
+            {
+                num = arr[i] * 2;
+                if (num > 9)
+                {
+                    y = num.ToString().ToCharArray();
+                    num = (y[0] - '0') + (y[1] - '0');
+                    sum += num;
+                }
+                else
+                    sum += num;
+            }
+            for(int i = 1; i < arr.Length; i += 2)
+            {
+                sum += arr[i];
+            }
+            if (sum % 10 == 0)
+                return true;
+            else
+                return false;
         }
         static void CheckBirthday(int[] inn, out int year, out int month, out int day)
         {
