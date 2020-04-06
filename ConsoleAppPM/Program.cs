@@ -25,9 +25,10 @@ namespace ConsoleAppPM
                             int year;
                             int day;
                             int month;
+                            string nameOperationINN = "INN1";
                             CheckINN(inn, out checkAnswerINN);
                             CheckBirthday(inn, out year, out month, out day);
-                            WriteAnswer(checkAnswerINN, CheckSex(inn), year, month, day);
+                            WriteAnswer(checkAnswerINN, nameOperationINN, CheckSex(inn), year, month, day);
                             break;
                         case 2:
                             Console.WriteLine("Данная функция пока не реализована");
@@ -39,22 +40,18 @@ namespace ConsoleAppPM
                 case 2:
                     Console.WriteLine("Напишите ваш код ЕДПРОУ");
                     int numSymOfArrayEDRPOU = 8;
+                    string nameOperationEDRPOU = "EDRPOU";
                     int[] kodEDPROU = DeclarArray(numSymOfArrayEDRPOU);
                     bool checkAnswerEDRPOU = CheckEDPROU(kodEDPROU);
-                    if(checkAnswerEDRPOU == true)                    
-                        Console.WriteLine("ЕДРПОУ верный");                    
-                    else
-                        Console.WriteLine("ЕДРПОУ не верный");
+                    WriteAnswer(checkAnswerEDRPOU, nameOperationEDRPOU);
                     break;
                 case 3:
                     Console.WriteLine("Напишите номер карты");
                     int numSymOfArrayCard = 16;
+                    string nameOperationCard = "Card";
                     int[] cardArr = DeclarArray(numSymOfArrayCard);
                     bool checkAnswerCard = CheckCard(cardArr);
-                    if (checkAnswerCard == true)
-                        Console.WriteLine("Номер карты верный");
-                    else
-                        Console.WriteLine("Номер карты не верный");
+                    WriteAnswer(checkAnswerCard, nameOperationCard);
                     break;
             }
         }
@@ -67,13 +64,13 @@ namespace ConsoleAppPM
                 y = notX.ToString().ToCharArray();
                 if (y.Length > num)
                 {
-                    Console.WriteLine("Количество введённых знаков больше 10. Повторите попытку.");
+                    Console.WriteLine($"Количество введённых знаков больше {num}. Повторите попытку.");
                 }
                 else
                 {
                     if (y.Length < num)
                     {
-                        Console.WriteLine("Количество введённых знаков меньше 10. Повторите попытку.");
+                        Console.WriteLine($"Количество введённых знаков меньше {num}. Повторите попытку.");
                     }
                 }
             } while (y.Length < num | y.Length > num);
@@ -198,8 +195,8 @@ namespace ConsoleAppPM
                         month++;
                     }
                 }
-            }
-            day += num;
+            }            
+            day += num;           
         }
         static string CheckSex(int[] inn)
         {
@@ -208,16 +205,36 @@ namespace ConsoleAppPM
             else
                 return "Male";
         }
-        static void WriteAnswer(bool x, string answerSex, int year, int month, int day)
+        static void WriteAnswer(bool x, string nameOperation, string answerSex = "Male", int year = 1900, int month = 01, int day = 01)
         {
-            if (x == true)
+            
+            switch (nameOperation)
             {
-                Console.WriteLine("INN верный");
-                Console.WriteLine("Пол - " + answerSex);
-                Console.WriteLine($"День вашего рождения: {year}.{month}.{day}");
+                case "INN1":
+                    if (x == true)
+                    {
+                        Console.WriteLine("INN верный");
+                        Console.WriteLine("Пол - " + answerSex);
+                        Console.WriteLine($"День вашего рождения: {year}.{month}.{day}");
+                    }
+                    else
+                        Console.WriteLine("INN не верный");
+                    break;
+                case "INN2":
+                    break;
+                case "EDRPOU":
+                    if (x == true)
+                        Console.WriteLine("ЕДРПОУ верный");
+                    else
+                        Console.WriteLine("ЕДРПОУ не верный");                  
+                    break;
+                case "Card":
+                    if (x == true)
+                        Console.WriteLine("Номер карты верный");
+                    else
+                        Console.WriteLine("Номер карты не верный");
+                    break;
             }
-            else
-                Console.WriteLine("INN не верный");
         }
     }
 }
