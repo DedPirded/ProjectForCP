@@ -1,14 +1,14 @@
 ﻿using System;
 
 namespace ConsoleAppPM
-{
+{   
     class Program
     {
         static void Main(string[] args)
         {
             //Console.WriteLine("Hell to World!");
             
-            Console.WriteLine("Выберете операцию: 1 - проверка INN кода; 2 - проверка ЕДРПОУ; 3 - проверка банкоской карты");
+            Console.WriteLine("Выберете операцию: 1 - проверка INN кода; 2 - проверка ЕДРПОУ; 3 - проверка банкоской карты; 4 - проверка IBAN");
             int numChoice = Convert.ToInt32(Console.ReadLine());
             switch (numChoice)
             {
@@ -52,6 +52,11 @@ namespace ConsoleAppPM
                     int[] cardArr = DeclarArray(numSymOfArrayCard);
                     bool checkAnswerCard = CheckCard(cardArr);
                     WriteAnswer(checkAnswerCard, nameOperationCard);
+                    break;               
+                case 4:
+                    string nameOperationIBAN = "IBAN";
+                    Console.WriteLine("Введите IBAN");
+                    WriteAnswer(DeclarInfFromIBAN(), nameOperationIBAN);
                     break;
             }
         }
@@ -74,12 +79,101 @@ namespace ConsoleAppPM
                     }
                 }
             } while (y.Length < num | y.Length > num);
-            int[] smt = new int[num];
-            for (int i = 0; i < smt.Length; i++)
-            {
-                smt[i] = Convert.ToInt32(y[i]) - '0';
-            }
+            int[] smt = ConverterCharToInt(y);          
             return smt;
+        }
+        static bool DeclarInfFromIBAN()
+        {
+            string stringIBAN = Console.ReadLine();
+            char[] arrayIBANChar = stringIBAN.ToCharArray();
+            int code = (arrayIBANChar[2] - '0') * 10 + arrayIBANChar[3] - '0';
+            int numLetters = ConverterLettesToInt(arrayIBANChar);
+            char[] some = numLetters.ToString().ToCharArray();
+            char[] fullArrIBANChar = new char[31];            
+            for (int i = 4; i < 29; i++)
+            {              
+                fullArrIBANChar[i-4] = arrayIBANChar[i];
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                fullArrIBANChar[i+25] =  some[i];
+            }
+            fullArrIBANChar[29] = '0';
+            fullArrIBANChar[30] = '0';
+            
+            int[] arrIBAN = ConverterCharToInt(fullArrIBANChar);           
+            bool answer = CheckIBAN(arrIBAN, code);
+            return answer;
+        }
+        static bool CheckIBAN(int[] arr, int code)
+        {            
+            int koef = 0;
+            int numKoef = 10000000;            
+            int j = 0;
+            int numOfRepeat = 9;
+            for (int x = 0; x < 5; x++)
+            {
+                int[] arr1 = new int[numOfRepeat];
+                int num = 0;
+                for (int i = 0; i < numOfRepeat; i++)
+                {                   
+                    arr1[i] = arr[j];
+                    j++;
+                }                
+                for (int i = 0; i < arr1.Length; i++)
+                {
+                    num += arr1[i] * Convert.ToInt32(Math.Pow(10, arr1.Length - i - 1));
+                }
+                num += koef * numKoef;
+                koef = num % 97;
+                if (koef >= 10)
+                {
+                    numOfRepeat = 7;
+                    numKoef = 10000000;
+                }
+                else
+                {
+                    numOfRepeat = 8;
+                    numKoef = 100000000;
+                }
+                if (arr.Length - j < 7)
+                {
+                    numOfRepeat = arr.Length - j;
+                    numKoef = Convert.ToInt32(Math.Pow(10, numOfRepeat));
+                }
+            }
+            if (98 - koef == code)
+                return true;
+            else
+                return false;
+            
+            
+        }
+        static int[] ConverterCharToInt(char[] x)
+        {
+            int[] arr = new int[x.Length];
+            for (int i = 0; i < x.Length; i++)
+            {
+                arr[i] = x[i] - '0';
+            }
+            return arr;
+        }
+        static int ConverterLettesToInt(char[] code)
+        {
+            char[] letters = new char[26] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+            int[] arr = new int[2]; 
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < letters.Length; j++)
+                {
+                    if (code[i] == letters[j])
+                    {
+                        arr[i] = j + 10;
+                    }
+                }                                  
+            }
+            int num = arr[0] * 100 + arr[1];
+            return num;
         }
         static void CheckINN(int[] inn, out bool checkAnswer)
         {
@@ -233,6 +327,12 @@ namespace ConsoleAppPM
                         Console.WriteLine("Номер карты верный");
                     else
                         Console.WriteLine("Номер карты не верный");
+                    break;
+                case "IBAN":
+                    if (x == true)
+                        Console.WriteLine("IBAN верный");
+                    else
+                        Console.WriteLine("IBAN не верный");
                     break;
             }
         }
