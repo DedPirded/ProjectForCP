@@ -205,18 +205,42 @@ namespace ConsoleAppPM
                 {
                     sum += arr[i] * koef[i];
                 }
-                if (sum % 11 == arr[arr.Length - 1])
+                if(sum % 11 >= 10)
+                {
+                    for (int i = 0; i < koef.Length; i++)
+                    {
+                        koef[i] += 2;
+                    }
+                    sum = 0;
+                    for (int i = 0; i < arr.Length - 1; i++)
+                    {
+                        sum += arr[i] * koef[i];
+                    }
+                }
+                if ((sum % 11) == arr[arr.Length - 1])
                     return true;
                 else
-                    return false;
-            }
+                    return false;          
+        }
             else
             {
-                int[] koef = new int[7] { 7, 2, 3, 4, 5, 6, 1};
+                int[] koef = new int[7] { 7, 1, 2, 3, 4, 5, 6};
                 int sum = 0;
                 for (int i = 0; i < arr.Length - 1; i++)
                 {
                     sum += arr[i] * koef[i];
+                }
+                if (sum % 11 >= 10)
+                {
+                    for (int i = 0; i < koef.Length; i++)
+                    {
+                        koef[i] += 2;
+                    }
+                    sum = 0;
+                    for (int i = 0; i < arr.Length - 1; i++)
+                    {
+                        sum += arr[i] * koef[i];
+                    }
                 }
                 if (sum % 11 == arr[arr.Length - 1])
                     return true;
